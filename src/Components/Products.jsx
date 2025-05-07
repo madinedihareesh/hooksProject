@@ -1,12 +1,10 @@
-import React, { createContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-
-// FIXED: consistent name
-export const CartContext = createContext();
+import { CartContext } from "./CartContext";
 
 export const Products = () => {
-  const [cart, setCart] = useState([]);
   const [data, setData] = useState([]);
+  const { cart, setCart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,26 +15,24 @@ export const Products = () => {
   }, []);
 
   return (
-    <CartContext.Provider value={{ cart, setCart }}>
-      <div className="container row">
-        {data.map((item) => (
-          <div key={item.id} className="col-4 card">
-            <img src={item.image} alt="product" width={"100%"} height={"450px"} />
-            <h3>Title: {item.title.length > 10 ? item.title.slice(0, 10) : item.title}</h3>
-            <p>{item.description.length > 20 ? item.description.slice(0, 20) + "..." : item.description}</p>
-            <h5>${item.price}</h5>
-            <div className="d-flex">
-              <button className="btn btn-outline-primary">Details</button>
-              <button
-                className="btn btn-outline-primary"
-                onClick={() => setCart([...cart, item])}
-              >
-                Add To Cart
-              </button>
-            </div>
+    <div className="container row">
+      {data.map((item) => (
+        <div key={item.id} className="col-4 card m-2 p-2">
+          <img src={item.image} alt="product" width="100%" height="250px" />
+          <h5>{item.title.slice(0, 20)}...</h5>
+          <p>{item.description.slice(0, 30)}...</p>
+          <h6>${item.price}</h6>
+          <div className="d-flex justify-content-between">
+            <button className="btn btn-outline-primary">Details</button>
+            <button
+              className="btn btn-outline-success"
+              onClick={() => setCart([...cart, item])}
+            >
+              Add To Cart
+            </button>
           </div>
-        ))}
-      </div>
-    </CartContext.Provider>
+        </div>
+      ))}
+    </div>
   );
 };
